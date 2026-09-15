@@ -6,8 +6,8 @@ Proyecto individual
 
 Descripción de la maquina virtual:
 
-S.O: UBUNTU 25.04 (64 bits) 
-Kernel: Linux 6.14
+S.O: Ubuntu 26.04 LTS (64 bits)
+Kernel: Linux 7.0.0-27
 Red: Bridge
 IP: 192.168.1.125
 
@@ -29,13 +29,20 @@ la humanidad tiene oportunidad de ganar.
 
 Arquitectura:
 
-Docker:
-│
-├── Aplicación web
-│
-└── Base de datos
+CLIENTE
+                    │
+                    ▼
+              Ubuntu Server
+                    │
+       ┌────────────┼────────────┐
+       │            │            │
+      SSH       Suricata       Docker
+                                  │
+                         ┌────────┴────────┐
+                         │                 │
+                        WEB               DB
 
-Network:
+     Network:
 
 Aplicación
     │
