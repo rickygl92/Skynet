@@ -18,12 +18,12 @@ Tecnologías:
 ├─ Base Datos:   MySQL 8.0
 ├─ Acceso:       OpenSSH 8.0 
 ├─ Seguridad:    Suricata IDS 
-└─ Orquestación: 4 Contenedores independientes
+└─ Orquestación: 2 Contenedores 
 
 
 Temática del CTF: "Skynet: Terminator Hunter"
 
-Skynet despierta,3 mil millones de personas mueren en 2 horas las máquinas toman el control global, las humanidad se desmorona...
+Skynet despierta, 3 mil millones de personas mueren en 2 horas, las máquinas toman el control global, las humanidad se desmorona...
 La resistencia ha localizado SKYNET-COMM-WEST-01 un servidor crítico de Skynet que controla el entro de comunicaciones principal en una instalación militar subterránea, si cae 
 la humanidad tiene oportunidad de ganar.
 
