@@ -30,7 +30,7 @@ la humanidad tiene oportunidad de ganar.
 Arquitectura:
 
 
-                 CLIENTE
+                 "CLIENT"
                     │
                     ▼
               Ubuntu Server
@@ -68,5 +68,26 @@ Arquitectura:
                   │
           skynet_mysql_data
 
+
+
+
+                       "Networks"
+                            │
+                            │ HTTP :80
+                            ▼
+                 ┌─────────────────────┐
+                 │      WordPress      │
+                 │                     │
+                 │  skynet_public      │
+                 │  skynet_private     │
+                 └─────────┬───────────┘
+                           │
+                           │ skynet_private
+                           ▼
+                 ┌─────────────────────┐
+                 │        MySQL        │
+                 │                     │
+                 │  skynet_private     │
+                 └─────────────────────┘
 
 
