@@ -29,7 +29,8 @@ la humanidad tiene oportunidad de ganar.
 
 Arquitectura:
 
-CLIENTE
+
+                 CLIENTE
                     │
                     ▼
               Ubuntu Server
@@ -42,14 +43,30 @@ CLIENTE
                          │                 │
                         WEB               DB
 
-     Network:
-
-Aplicación
-    │
-    │ Red Docker
-    ▼
-Base de datos
-
+                        
+    Conexion por:
+        │
+        ├── SSH :22
+        │
+        └── HTTP :80
+                 │
+                 ▼
+         ┌─────────────────┐
+         │    WordPress    │
+         │                 │
+         │ skynet_public   │
+         │ skynet_private  │
+         └────────┬────────┘
+                  │
+                  │ skynet_private
+                  ▼
+         ┌─────────────────┐
+         │      MySQL      │
+         │                 │
+         │ skynet_private  │
+         └────────┬────────┘
+                  │
+          skynet_mysql_data
 
 
 
