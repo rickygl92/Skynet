@@ -1,5 +1,8 @@
 Scripts - SKYNET Terminator Hunter
 
+
+"FASE 1: Preparacion de VM"
+
 1 "System Check"
 
 cat /etc/os-release
@@ -61,3 +64,13 @@ docker --version
 docker compose version
 sudo systemctl status docker --no-pager
 sudo docker run --rm hello-world
+
+
+
+"Fase 2: Maquetacion de arquitectura (Volumes, Networks, Containers)"
+
+1 "Networks"
+
+docker network create skynet_public
+docker network create --internal skynet_private
+
