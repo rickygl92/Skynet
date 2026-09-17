@@ -65,6 +65,45 @@ docker compose version
 sudo systemctl status docker --no-pager
 sudo docker run --rm hello-world
 
+4 "Configuracion de SSH"
+
+set -e
+
+if ! dpkg -s openssh-server > /dev/null 2>&1; then
+    sudo apt update
+    sudo apt install -y openssh-server
+fi
+
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+
+sudo tee /etc/ssh/sshd_config.d/99-skynet.conf > /dev/null <<EOF
+Port 22
+PermitRootLogin no
+PasswordAuthentication yes
+PubkeyAuthentication yes
+EOF
+
+sudo /usr/sbin/sshd -t
+
+sudo systemctl enable --now ssh
+sudo systemctl reload ssh
+
+sudo systemctl status ssh --no-pager
+sudo ss -tlnp | grep ':22'
+
+5 "Configuracion de HTTP"
+
+#!/bin/bash
+
+set -e
+
+sudo ufw allow 80/tcp
+sudo ufw allow 22/tcp
+
+sudo ufw status
+
+sudo ss -tlnp | grep ':80' || true
+
 
 
 "Fase 2: Maquetacion de arquitectura (Volumes, Networks, Containers)"
@@ -74,3 +113,29 @@ sudo docker run --rm hello-world
 docker network create skynet_public
 docker network create --internal skynet_private
 
+2 "Volumenes"
+
+docker volume create skynet_mysql_data
+docker volume create skynet_wordpress_data
+
+3 "MySQL"
+
+docker run -d \
+  --name skynet_mysql \
+  --network skynet_private \
+  --env-file .env \
+  -v skynet_mysql_data:/var/lib/mysql \
+  --restart unless-stopped \
+  mysql:8.0
+
+4 "WordPress"
+
+
+    docker create \
+      --name skynet_wordpress \
+      --network skynet_private \
+      --env-file .env \
+      -p 80:80 \
+      -v skynet_wordpress_data:/var/www/html \
+      --restart unless-stopped \
+      wordpress:6.4-apache
