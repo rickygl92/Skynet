@@ -109,3 +109,20 @@ Arquitectura:
 | Base de datos  | MySQL 8.0             | 3306/TCP | No       | Persistencia de datos de WordPress |
 | Docker         | Docker Engine         | N/A      | No       | Ejecución y gestión de los contenedores |
 | IDS            | Suricata              | N/A      | No       | Monitorización y detección de tráfico de red |
+
+
+## Mapa de evidencias
+
+| Acción | Dónde buscar |
+|---|---|
+| Login SSH correcto | `journalctl -u ssh` / `/var/log/auth.log` |
+| Login SSH incorrecto | `journalctl -u ssh` / `/var/log/auth.log` |
+| Petición HTTP válida | `docker logs skynet_wordpress` |
+| Petición HTTP 404 / incorrecta | `docker logs skynet_wordpress` |
+| Logs de WordPress | `docker logs skynet_wordpress` |
+| Logs de MySQL | `docker logs skynet_mysql` |
+| Estado de contenedores | `docker ps` |
+| Logs generales de Docker | `docker logs <nombre_contenedor>` |
+| Eventos del sistema Linux | `journalctl` |
+| Alertas de Suricata | `/var/log/suricata/fast.log` |
+| Eventos detallados de Suricata | `/var/log/suricata/eve.json` |
