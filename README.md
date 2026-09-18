@@ -115,14 +115,14 @@ Arquitectura:
 
 | Acción | Dónde buscar |
 |---|---|
-| Login SSH correcto | `journalctl -u ssh` / `/var/log/auth.log` |
-| Login SSH incorrecto | `journalctl -u ssh` / `/var/log/auth.log` |
-| Petición HTTP válida | `docker logs skynet_wordpress` |
-| Petición HTTP 404 / incorrecta | `docker logs skynet_wordpress` |
-| Logs de WordPress | `docker logs skynet_wordpress` |
-| Logs de MySQL | `docker logs skynet_mysql` |
-| Estado de contenedores | `docker ps` |
-| Logs generales de Docker | `docker logs <nombre_contenedor>` |
-| Eventos del sistema Linux | `journalctl` |
-| Alertas de Suricata | `/var/log/suricata/fast.log` |
-| Eventos detallados de Suricata | `/var/log/suricata/eve.json` |
+| Login SSH correcto | sudo tail -n 5 `journalctl -u ssh` / `/var/log/auth.log` |
+| Login SSH incorrecto | sudo tail -n 5 `journalctl -u ssh` / `/var/log/auth.log` |
+| Petición HTTP válida | sudo tail -n 5 `docker logs skynet_wordpress` |
+| Petición HTTP 404 / incorrecta | sudo tail -n 5 `docker logs skynet_wordpress` |
+| Logs de WordPress | sudo tail -n 5 `docker logs skynet_wordpress` |
+| Logs de MySQL | sudo tail -n 5 `docker logs skynet_mysq l` |
+| Estado de contenedores | sudo tail -n 5 `docker ps` |
+| Logs generales de Docker | sudo tail -n 5 `docker logs <nombre_contenedor>` |
+| Eventos del sistema Linux | sudo tail -n 5 `journalctl` |
+| Alertas de Suricata | sudo tail -n 5 `/var/log/suricata/fast.log` |
+| Eventos detallados de Suricata | sudo tail -n 5 `/var/log/suricata/eve.json` |
