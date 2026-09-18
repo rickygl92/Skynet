@@ -91,3 +91,9 @@ Arquitectura:
                  └─────────────────────┘
 
 
+
+
+| Servicio | Puerto | Expuesto |          Función          |
+| SSH      | 22/TCP | Sí       | Acceso remoto al servidor |
+| WordPress| 80/TCP | Sí       |      Aplicación web       |
+| MySQL    |3306/TCP| No       |   Base de datos interna   |
