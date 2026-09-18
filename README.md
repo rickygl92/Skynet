@@ -126,3 +126,32 @@ Arquitectura:
 | Eventos del sistema Linux | sudo tail -n 5 `journalctl` |
 | Alertas de Suricata | sudo tail -n 5 `/var/log/suricata/fast.log` |
 | Eventos detallados de Suricata | sudo tail -n 5 `/var/log/suricata/eve.json` |
+
+
+## Suricata IDS
+
+Suricata se encuentra instalado directamente sobre la máquina virtual
+Ubuntu y se utiliza como sistema IDS para monitorizar el tráfico de red
+del servidor SKYNET-COMM-WEST-01.
+
+### Estado actual
+
+| Parámetro | Configuración |
+|---|---|
+| IDS | Suricata |
+| Instalación | Directamente sobre Ubuntu Server |
+| Estado del servicio | Activo |
+| Interfaz monitorizada | `enp0s3` |
+| IP actual del servidor | `192.168.1.124` |
+| HOME_NET | `192.168.1.124/32` |   comentario : mirar lo de las ips para que el atacante despues se pueda conectar (hacer bien la configuracion)
+| Archivo de configuración | `/etc/suricata/suricata.yaml` |
+| Reglas locales | `/var/lib/suricata/rules/local.rules` |
+| Log de alertas | `/var/log/suricata/fast.log` |
+| Log de eventos | `/var/log/suricata/eve.json` |
+
+### Interfaz de red
+
+La interfaz principal utilizada por Suricata es:
+
+```text
+enp0s3 
