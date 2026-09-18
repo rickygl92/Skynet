@@ -139,3 +139,14 @@ docker run -d \
       -v skynet_wordpress_data:/var/www/html \
       --restart unless-stopped \
       wordpress:6.4-apache
+
+5 "Suricata" 
+
+
+sudo apt update
+sudo apt install -y suricata
+
+sudo systemctl enable --now suricata
+
+suricata --version
+sudo systemctl status suricata --no-pager
