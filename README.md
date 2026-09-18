@@ -154,4 +154,18 @@ del servidor SKYNET-COMM-WEST-01.
 La interfaz principal utilizada por Suricata es:
 
 ```text
-enp0s3 
+enp0s3
+
+
+
+## Línea base de detección
+
+| Acción | Fuente | Detectada / registrada | Información obtenida |
+|---|---|---|---|
+| SSH correcto | `journalctl -u ssh` / `/var/log/auth.log` | Sí | Fecha/hora, IP origen, usuario y autenticación aceptada |
+| SSH incorrecto | `journalctl -u ssh` / `/var/log/auth.log` | Sí | Fecha/hora, IP origen, usuario e intento de autenticación fallido |
+| Web válida | `docker logs skynet_wordpress` | Sí | IP origen, fecha/hora, método HTTP, URL y código de respuesta |
+| Web 404 | `docker logs skynet_wordpress` | Sí | IP origen, fecha/hora, URL solicitada y código HTTP `404` |
+| Docker | `docker logs` / `docker ps` | Sí | Estado de contenedores, inicialización, actividad y errores |
+| Ping | Suricata / `tcpdump` / `stats.log` | Parcial | Tráfico ICMP capturado y decodificado; alerta personalizada pendiente de validación |
+| Nmap | Suricata / logs del sistema y servicios | Pendiente | Pendiente de realizar y documentar una prueba real |
