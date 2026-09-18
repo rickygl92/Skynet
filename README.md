@@ -90,10 +90,22 @@ Arquitectura:
                  │  skynet_private     │
                  └─────────────────────┘
 
+## Tabla informativa
+
+| Servicio  | Puerto   | Expuesto | Función                    |
+|-----------|----------|----------|----------------------------|
+| SSH       | 22/TCP   | Sí       | Acceso remoto al servidor  |
+| WordPress | 80/TCP   | Sí       | Aplicación web             |
+| MySQL     | 3306/TCP | No       | Base de datos interna      |
 
 
 
-| Servicio | Puerto | Expuesto |          Función          |
-| SSH      | 22/TCP | Sí       | Acceso remoto al servidor |
-| WordPress| 80/TCP | Sí       |      Aplicación web       |
-| MySQL    |3306/TCP| No       |   Base de datos interna   |
+## Servicios y puertos
+
+| Servicio        | Tecnología            | Puerto   | Expuesto | Función |
+|----------------|-----------------------|----------|----------|---------|
+| SSH            | OpenSSH               | 22/TCP   | Sí       | Acceso remoto y administración del servidor |
+| Web            | WordPress + Apache    | 80/TCP   | Sí       | Aplicación web accesible por los usuarios |
+| Base de datos  | MySQL 8.0             | 3306/TCP | No       | Persistencia de datos de WordPress |
+| Docker         | Docker Engine         | N/A      | No       | Ejecución y gestión de los contenedores |
+| IDS            | Suricata              | N/A      | No       | Monitorización y detección de tráfico de red |
