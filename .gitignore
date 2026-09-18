@@ -1,1 +1,151 @@
+# =========================
+# Variables de entorno
+# =========================
 
+.env
+.env.*
+!.env.example
+
+
+# =========================
+# Credenciales y secretos
+# =========================
+
+secrets/
+credentials/
+passwords/
+passwords.txt
+credentials.txt
+secrets.txt
+
+*.secret
+*.secrets
+
+*.key
+*.pem
+*.p12
+*.pfx
+
+id_rsa
+id_rsa.pub
+id_ed25519
+id_ed25519.pub
+
+
+# =========================
+# Imágenes y máquinas virtuales
+# =========================
+
+*.iso
+*.ova
+*.ovf
+*.vdi
+*.vhd
+*.vhdx
+*.vmdk
+*.sav
+*.vbox-prev
+
+
+# =========================
+# Ejecutables y binarios
+# =========================
+
+*.exe
+*.msi
+*.dll
+*.bin
+
+
+# =========================
+# Bases de datos y backups
+# =========================
+
+*.sql
+*.dump
+*.db
+*.sqlite
+*.sqlite3
+
+*.bak
+*.backup
+*.old
+
+
+# =========================
+# Logs
+# =========================
+
+*.log
+logs/
+
+
+# =========================
+# Archivos temporales
+# =========================
+
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+.cache/
+tmp/
+temp/
+
+
+# =========================
+# Sistema operativo
+# =========================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# =========================
+# IDE / Editores
+# =========================
+
+.vscode/
+.idea/
+
+
+# =========================
+# Python
+# =========================
+
+__pycache__/
+*.pyc
+*.pyo
+
+
+# =========================
+# Certificados / llaves SSH
+# =========================
+
+*.crt.key
+*.private
+*.priv
+
+
+# =========================
+# Capturas de memoria
+# =========================
+
+*.dmp
+*.core
+core
+
+
+# =========================
+# Archivos comprimidos grandes
+# =========================
+
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
