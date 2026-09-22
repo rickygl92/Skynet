@@ -1,53 +1,40 @@
+cat > docker-compose.yml <<'EOF'
 services:
-
   mysql:
     image: mysql:8.0
     container_name: skynet_mysql
     restart: unless-stopped
-
     env_file:
       - .env
-
     volumes:
       - skynet_mysql_data:/var/lib/mysql
-
     networks:
       - skynet_private
-
 
   wordpress:
     image: wordpress:6.4-apache
     container_name: skynet_wordpress
     restart: unless-stopped
-
     env_file:
       - .env
-
     ports:
       - "80:80"
-
     volumes:
       - skynet_wordpress_data:/var/www/html
-
     networks:
       - skynet_public
       - skynet_private
-
     depends_on:
       - mysql
 
-
 volumes:
-
   skynet_mysql_data:
     name: skynet_mysql_data
 
   skynet_wordpress_data:
     name: skynet_wordpress_data
 
-
 networks:
-
   skynet_public:
     name: skynet_public
     driver: bridge
@@ -56,15 +43,4 @@ networks:
     name: skynet_private
     driver: bridge
     internal: true
-
-
-    networks:
-  - skynet_public
-  - skynet_private
-
-
-  networks:
-  - skynet_private
-
-  skynet_mysql_data
-skynet_wordpress_data
+EOF
