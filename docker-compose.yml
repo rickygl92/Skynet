@@ -3,16 +3,12 @@ services:
     image: mysql:8.0
     container_name: skynet_mysql
     restart: unless-stopped
-
     env_file:
       - .env
-
     expose:
       - "3306"
-
     volumes:
       - skynet_mysql_data:/var/lib/mysql
-
     networks:
       - skynet_private
 
@@ -20,20 +16,15 @@ services:
     image: wordpress:6.4-apache
     container_name: skynet_wordpress
     restart: unless-stopped
-
     env_file:
       - .env
-
     ports:
       - "80:80"
-
     volumes:
       - skynet_wordpress_data:/var/www/html
-
     networks:
       - skynet_public
       - skynet_private
-
     depends_on:
       - mysql
 
