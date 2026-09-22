@@ -6,13 +6,13 @@ Proyecto individual
 
 Descripción de la maquina virtual:
 
-S.O: Ubuntu 26.04 LTS (64 bits)
-Kernel: Linux 7.0.0-27
+S.O: Ubuntu 23.04 LTS (64 bits)
+Kernel: Linux 5.15.0
 Red: Bridge
-IP: 192.168.1.125
+IP: ¿?
 
 Tecnologías:
-─ SO:           Ubuntu 25.04 (64 bits)
+─ SO:           Ubuntu 23.04 (64 bits)
 ├─ Virtualización: Docker + Docker Compose
 ├─ Web:          WordPress 6.4
 ├─ Base Datos:   MySQL 8.0
