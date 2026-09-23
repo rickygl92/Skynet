@@ -112,43 +112,6 @@ Arquitectura:
 | IDS            | Suricata              | N/A      | No       | Monitorización y detección de tráfico de red |
 
 
-## Mapa de evidencias
-
-| Acción | Dónde buscar |
-|---|---|
-| Login SSH correcto | sudo tail -n 5 `journalctl -u ssh` / `/var/log/auth.log` |
-| Login SSH incorrecto | sudo tail -n 5 `journalctl -u ssh` / `/var/log/auth.log` |
-| Petición HTTP válida | sudo tail -n 5 `docker logs skynet_wordpress` |
-| Petición HTTP 404 / incorrecta | sudo tail -n 5 `docker logs skynet_wordpress` |
-| Logs de WordPress | sudo tail -n 5 `docker logs skynet_wordpress` |
-| Logs de MySQL | sudo tail -n 5 `docker logs skynet_mysq l` |
-| Estado de contenedores | sudo tail -n 5 `docker ps` |
-| Logs generales de Docker | sudo tail -n 5 `docker logs <nombre_contenedor>` |
-| Eventos del sistema Linux | sudo tail -n 5 `journalctl` |
-| Alertas de Suricata | sudo tail -n 5 `/var/log/suricata/fast.log` |
-| Eventos detallados de Suricata | sudo tail -n 5 `/var/log/suricata/eve.json` |
-
-
-## Suricata IDS
-
-Suricata se encuentra instalado directamente sobre la máquina virtual
-Ubuntu y se utiliza como sistema IDS para monitorizar el tráfico de red
-del servidor SKYNET-COMM-WEST-01.
-
-### Estado actual
-
-| Parámetro | Configuración |
-|---|---|
-| IDS | Suricata |
-| Instalación | Directamente sobre Ubuntu Server |
-| Estado del servicio | Activo |
-| Interfaz monitorizada | `enp0s3` |
-| IP actual del servidor | `192.168.1.124` |
-| HOME_NET | `192.168.1.124/32` |   comentario : mirar lo de las ips para que el atacante despues se pueda conectar (hacer bien la configuracion)
-| Archivo de configuración | `/etc/suricata/suricata.yaml` |
-| Reglas locales | `/var/lib/suricata/rules/local.rules` |
-| Log de alertas | `/var/log/suricata/fast.log` |
-| Log de eventos | `/var/log/suricata/eve.json` |
 
 ### Interfaz de red
 
@@ -173,7 +136,7 @@ enp0s3
 ```
 ### Evidencia real de escaneo Nmap
 
-Se realizó un escaneo real desde una máquina Windows contra el servidor Ubuntu utilizando Nmap.
+Se realizó un escaneo real desde una máquina Kali contra el servidor Ubuntu utilizando Nmap.
 
 Ejemplo de prueba realizada:
 
