@@ -169,3 +169,4 @@ enp0s3
 | Docker | `docker logs` / `docker ps` | Sí | Estado de contenedores, inicialización, actividad y errores |
 | Ping | Suricata / `tcpdump` / `stats.log` | Parcial | Tráfico ICMP capturado y decodificado; alerta personalizada pendiente de validación |
 | Nmap | Suricata / logs del sistema y servicios | Pendiente | Pendiente de realizar y documentar una prueba real |
+```
