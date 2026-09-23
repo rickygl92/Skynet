@@ -1,3 +1,4 @@
+
 Proyecto final del curso de Seguridad en Sistemas Informaticos (Ironhack) con tematica de Terminator (Skynet) 
 
 Nombre: Ricardo Garcia López 
@@ -170,3 +171,59 @@ enp0s3
 | Ping | Suricata / `tcpdump` / `stats.log` | Parcial | Tráfico ICMP capturado y decodificado; alerta personalizada pendiente de validación |
 | Nmap | Suricata / logs del sistema y servicios | Pendiente | Pendiente de realizar y documentar una prueba real |
 ```
+### Evidencia real de escaneo Nmap
+
+Se realizó un escaneo real desde una máquina Windows contra el servidor Ubuntu utilizando Nmap.
+
+Ejemplo de prueba realizada:
+
+`nmap -Pn -sT -p 22,80 <IP_DEL_SERVIDOR>`
+
+Suricata detectó los paquetes TCP SYN generados durante el escaneo mediante la regla local:
+
+`alert tcp any any -> $HOME_NET any (msg:"SKYNET - TCP SYN DETECTADO"; flags:S; sid:1000002; rev:1;)`
+
+Las alertas fueron verificadas mediante:
+
+`sudo grep 'SKYNET' /var/log/suricata/fast.log`
+
+y:
+
+`sudo grep 'SKYNET' /var/log/suricata/eve.json`
+
+La actividad quedó registrada correctamente en:
+
+- `/var/log/suricata/fast.log`
+- `/var/log/suricata/eve.json`
+
+Los eventos permiten identificar información como:
+
+- fecha y hora
+- IP de origen
+- IP de destino
+- protocolo TCP
+- puerto origen
+- puerto destino
+- SID de la regla
+- mensaje de la alerta
+
+La regla TCP utiliza el SID `1000002`.
+
+Esta prueba demuestra que Suricata puede detectar y registrar tráfico TCP SYN generado durante un escaneo real de puertos con Nmap.
+
+## Estado de las pruebas de Suricata
+
+| Prueba | Resultado |
+|---|---|
+| Instalación de Suricata | Completada |
+| Configuración de `suricata.yaml` | Completada |
+| Configuración de `local.rules` | Completada |
+| Validación con `suricata -T` | Correcta |
+| Servicio Suricata | Activo |
+| Detección ICMP / Ping | Correcta |
+| Alerta ICMP en `fast.log` | Correcta |
+| Alerta ICMP en `eve.json` | Correcta |
+| Escaneo real con Nmap | Completado |
+| Detección TCP SYN | Correcta |
+| Alerta TCP en `fast.log` | Correcta |
+| Alerta TCP en `eve.json` | Correcta |
