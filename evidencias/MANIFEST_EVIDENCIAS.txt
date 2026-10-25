@@ -1,0 +1,30 @@
+EVIDENCIAS SKYNET - MF0489
+
+Fase 1
+- La evidencia principal es el diagrama de arquitectura incluido en README.md.
+
+Fase 2
+- F2_2_CA_raiz.png
+- F2_3_CSR_SAN_verificacion.png
+- F2_4_certificado_servidor.png
+- F2_5_verificacion_certificado.png
+- F2_6_permisos_validacion.png
+
+Fase 3
+- F3_1_2_compose_nginx.png
+- F3_2_3_certificado_puertos_redes.png
+- F3_4_wordpress_mysql_https.png
+- F3_5_6_https_redireccion.png
+
+Fase 4
+- F4_1_linea_base_tls.png
+- F4_2_configuracion_nginx_tls.png
+- F4_2_protocolos_tls.png
+- F4_3_http_claro.png
+- F4_3_https_cifrado.png
+- F4_4_suricata_alerta.png
+- F4_4_suricata_regla_validacion.png
+- F4_5_correlacion_nginx_suricata.png
+- F4_6_comprobacion_final.png
+
+No se incluyen capturas de errores intermedios.

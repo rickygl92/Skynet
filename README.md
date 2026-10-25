@@ -475,3 +475,39 @@ Se comprobó finalmente que:
 - Nginx supera `nginx -t`.
 - Suricata permanece activo.
 - WordPress responde mediante HTTPS con `HTTP 200`.
+
+
+## Evidencias
+
+Las siguientes capturas corresponden a las comprobaciones reales realizadas durante la implementación y validación del proyecto.
+
+### Fase 1 - Arquitectura
+
+La evidencia de esta fase corresponde al diagrama de arquitectura incluido en el propio README, donde se representa Nginx como reverse proxy, la terminación TLS, las redes Docker, WordPress, MySQL, la CA externa y Suricata.
+
+### Fase 2 - PKI con OpenSSL
+
+- [F2.2 - CA raíz y validación](evidencias/F2_2_CA_raiz.png)
+- [F2.3 - CSR, SAN y verificación](evidencias/F2_3_CSR_SAN_verificacion.png)
+- [F2.4 - Certificado del servidor](evidencias/F2_4_certificado_servidor.png)
+- [F2.5 - Verificación del certificado](evidencias/F2_5_verificacion_certificado.png)
+- [F2.6 - Instalación, permisos y validación](evidencias/F2_6_permisos_validacion.png)
+
+### Fase 3 - HTTPS con Nginx Reverse Proxy y Docker
+
+- [F3.1 / F3.2 - Docker Compose, Nginx y validación](evidencias/F3_1_2_compose_nginx.png)
+- [F3.2 / F3.3 - Certificado, puertos y redes Docker](evidencias/F3_2_3_certificado_puertos_redes.png)
+- [F3.4 - WordPress, MySQL y HTTPS](evidencias/F3_4_wordpress_mysql_https.png)
+- [F3.5 / F3.6 - HTTPS desde cliente y redirección HTTP a HTTPS](evidencias/F3_5_6_https_redireccion.png)
+
+### Fase 4 - Validación TLS y monitorización
+
+- [F4.1 - Línea base TLS](evidencias/F4_1_linea_base_tls.png)
+- [F4.2 - Configuración TLS de Nginx](evidencias/F4_2_configuracion_nginx_tls.png)
+- [F4.2 - Pruebas TLS 1.2, TLS 1.3 y rechazo de TLS 1.1](evidencias/F4_2_protocolos_tls.png)
+- [F4.3 - Tráfico HTTP visible en claro](evidencias/F4_3_http_claro.png)
+- [F4.3 - Tráfico HTTPS cifrado](evidencias/F4_3_https_cifrado.png)
+- [F4.4 - Alerta HTTPS real en Suricata](evidencias/F4_4_suricata_alerta.png)
+- [F4.4 - Regla propia y validación de Suricata](evidencias/F4_4_suricata_regla_validacion.png)
+- [F4.5 - Correlación entre Nginx y Suricata](evidencias/F4_5_correlacion_nginx_suricata.png)
+- [F4.6 - Comprobación final del entorno](evidencias/F4_6_comprobacion_final.png)
