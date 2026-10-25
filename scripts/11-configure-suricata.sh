@@ -32,6 +32,7 @@ sudo mkdir -p /etc/suricata/rules
 sudo tee "$RULES" > /dev/null <<'EOF'
 alert icmp any any -> any any (msg:"SKYNET - ICMP DETECTADO"; sid:1000003; rev:1;)
 alert tcp any any -> $HOME_NET any (msg:"SKYNET - TCP SYN DETECTADO"; flags:S; sid:1000002; rev:1;)
+alert tls any any -> $HOME_NET 443 (msg:"SKYNET - HTTPS TLS CONNECTION"; flow:established,to_server; sid:1000004; rev:1;)
 EOF
 
 sudo suricata -T -c "$CONFIG"

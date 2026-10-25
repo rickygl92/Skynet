@@ -376,3 +376,102 @@ Resultado:
 Redirección:
 
 `https://SkynetFinal/wp-login.php`
+
+
+## Fase 4 - Validación TLS y monitorización
+
+Se realizaron pruebas sobre el servicio HTTPS para comprobar la configuración TLS y la visibilidad del tráfico desde Suricata.
+
+### Línea base HTTPS
+
+La conexión HTTPS fue validada mediante OpenSSL utilizando la CA de laboratorio y el nombre `SkynetFinal`.
+
+La negociación obtenida fue:
+
+- Protocolo: TLS 1.3
+- Cipher suite: `TLS_AES_256_GCM_SHA384`
+- Certificado presentado: `CN=SkynetFinal`
+- Verificación del certificado: `OK`
+- Nombre verificado: `SkynetFinal`
+
+### Protocolos TLS
+
+La configuración activa de Nginx permite:
+
+`TLSv1.2 TLSv1.3`
+
+Se realizaron pruebas independientes:
+
+- TLS 1.2: conexión correcta.
+- TLS 1.3: conexión correcta.
+- TLS 1.1: conexión rechazada.
+
+Los protocolos TLS obsoletos no se encuentran habilitados.
+
+### Comparación HTTP y HTTPS
+
+Se realizaron capturas sobre la interfaz `enp0s3`.
+
+En tráfico HTTP por el puerto 80 fue posible observar en claro información de aplicación como:
+
+`HEAD /wp-login.php?fase4=1 HTTP/1.1`
+
+En la prueba equivalente sobre HTTPS por el puerto 443 se observó tráfico TLS cifrado, sin poder visualizar en claro la ruta solicitada.
+
+Suricata puede observar información de red y TLS como IP origen, IP destino, puertos, versión TLS y SNI, pero no descifra por sí solo las rutas HTTP transportadas dentro de HTTPS.
+
+Nginx sí dispone de la petición HTTP completa después de realizar la terminación TLS.
+
+### Regla Suricata para HTTPS
+
+Se añadió la siguiente regla local:
+
+`alert tls any any -> $HOME_NET 443 (msg:"SKYNET - HTTPS TLS CONNECTION"; flow:established,to_server; sid:1000004; rev:1;)`
+
+La configuración fue validada mediante:
+
+`suricata -T -c /etc/suricata/suricata.yaml`
+
+Resultado:
+
+`Configuration provided was successfully loaded`
+
+Se realizó posteriormente una conexión HTTPS real y se generaron alertas con SID `1000004` tanto en:
+
+- `/var/log/suricata/fast.log`
+- `/var/log/suricata/eve.json`
+
+La regla identifica una conexión TLS hacia el puerto 443. Esta alerta no implica por sí misma que exista un ataque.
+
+### Correlación Suricata y Nginx
+
+Se utilizó la petición:
+
+`GET /wp-login.php?suricata=1`
+
+Nginx registró:
+
+- Cliente: `192.168.1.13`
+- Fecha/hora: `25/Oct/2026 11:00:27`
+- Petición: `GET /wp-login.php?suricata=1`
+- Resultado: `HTTP 200`
+
+Suricata registró en el mismo instante:
+
+- Origen: `192.168.1.13`
+- Destino: `192.168.1.134:443`
+- SID: `1000004`
+- SNI: `skynetfinal`
+- TLS: `1.3`
+
+En esta prueba las dos fuentes mantuvieron la misma IP del cliente.
+
+### Comprobación final
+
+Se comprobó finalmente que:
+
+- MySQL permanece activo.
+- WordPress mantiene conexión con la base de datos: `DB_OK`.
+- Nginx supera `nginx -t`.
+- Suricata permanece activo.
+- WordPress responde mediante HTTPS con `HTTP 200`.
