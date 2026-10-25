@@ -529,6 +529,96 @@ Se comprobó finalmente que:
 - Suricata permanece activo.
 - WordPress responde mediante HTTPS con `HTTP 200`.
 
+### Resumen de validación extremo a extremo
+
+| Prueba | Resultado real | Evidencia |
+|---|---|---|
+| Contenedores y reverse proxy activos | Correcto. MySQL, WordPress y Nginx activos | `F4_6_comprobacion_final.png` |
+| Puerto 443 accesible desde el cliente | Correcto | `F3_2_3_certificado_puertos_redes.png` |
+| Certificado y dominio válidos | Certificado para `SkynetFinal`, SAN `DNS:SkynetFinal` | `F2_5_verificacion_certificado.png` |
+| Verificación de confianza satisfactoria | Correcta utilizando la CA del laboratorio | `F4_1_linea_base_tls.png` |
+| Versión TLS negociada | TLS 1.3 | `F4_1_linea_base_tls.png` |
+| Cipher suite negociada | `TLS_AES_256_GCM_SHA384` | `F4_1_linea_base_tls.png` |
+| Aplicación funcionando | WordPress responde mediante HTTPS con HTTP 200 | `F4_6_comprobacion_final.png` |
+
+### Validación de versiones TLS
+
+| Protocolo | Resultado real | ¿Cumple el requisito? |
+|---|---|---|
+| TLS 1.1 | No es ofrecido por Nginx. La enumeración del servidor no muestra TLS 1.1 | Sí, debe permanecer deshabilitado |
+| TLS 1.2 | Conexión correcta. Cipher observado: `ECDHE-RSA-AES256-GCM-SHA384` | Sí |
+| TLS 1.3 | Conexión correcta mediante OpenSSL. Cipher observado: `TLS_AES_256_GCM_SHA384` | Sí |
+
+La prueba inicial de TLS 1.1 mediante OpenSSL devolvió `no protocols available` desde el propio cliente, por lo que no se utilizó por sí sola para demostrar un rechazo del servidor. La enumeración posterior mediante Nmap confirmó que Nginx no ofrece TLS 1.1.
+
+### Comparación de visibilidad HTTP y HTTPS
+
+| Elemento observado desde la interfaz externa | HTTP | HTTPS |
+|---|---|---|
+| IP origen y destino | `192.168.1.13` → `192.168.1.134` | `192.168.1.13` → `192.168.1.134` |
+| Puerto de conexión | 80 | 443 |
+| Método HTTP | `HEAD` visible en claro | `GET` visible posteriormente en los logs de Nginx |
+| Ruta solicitada | `/wp-login.php?fase4=1` visible en la captura de tráfico | `/wp-login.php?suricata=1` no visible en claro desde la interfaz externa |
+| Versión TLS / metadatos TLS | No aplica | TLS 1.3 y SNI `skynetfinal` |
+| Contenido HTTP en texto claro | Sí | No |
+| Eventos disponibles en Suricata | Tráfico de red observable | Alerta TLS `SID 1000004` y metadatos TLS |
+
+HTTP permite observar directamente datos de aplicación como el método y la ruta solicitada. En HTTPS, la interfaz externa observa la conexión TLS, las direcciones IP, los puertos y determinados metadatos, pero no el contenido HTTP cifrado.
+
+### Evento, alerta e incidente
+
+Un **evento** es cualquier actividad registrada por los sistemas de monitorización, por ejemplo una conexión hacia el puerto 443.
+
+Una **alerta** se produce cuando el tráfico coincide con una regla definida. En esta prueba, Suricata genera la alerta `SID 1000004 - SKYNET - HTTPS TLS CONNECTION`.
+
+Un **incidente** implicaría que la actividad observada representa realmente un problema de seguridad que requiere investigación o respuesta. La conexión HTTPS utilizada en estas pruebas no constituye un incidente.
+
+Por tanto, una conexión o un paquete SYN hacia el puerto 443 no significa por sí mismo que exista un ataque.
+
+### Conclusión de monitorización HTTPS
+
+Una aplicación HTTPS puede monitorizarse sin descifrar directamente sus peticiones desde la interfaz externa combinando distintas fuentes.
+
+Suricata permite observar direcciones IP, puertos, sesiones, versión TLS, SNI y alertas asociadas a reglas. Nginx, al realizar la terminación TLS, puede registrar posteriormente el método HTTP, la ruta solicitada y el código de respuesta.
+
+La correlación mediante dirección IP, marcas temporales y características de la conexión permite relacionar ambas fuentes y obtener visibilidad sobre la actividad de la aplicación sin necesidad de que Suricata descifre el contenido HTTPS.
+
+## Fase 5 - Último check
+
+Se realizó una comprobación final del entorno y de la documentación publicada.
+
+- El diagrama representa la arquitectura definitiva con Nginx como reverse proxy HTTPS.
+- El despliegue utilizado corresponde al definido mediante Docker Compose.
+- Los certificados instalados fueron verificados mediante OpenSSL.
+- La configuración de Docker Compose fue validada mediante `docker compose config --quiet`.
+- La configuración de Nginx supera correctamente `nginx -t`.
+- La aplicación WordPress funciona mediante HTTPS.
+- Las peticiones HTTP son redirigidas a HTTPS.
+- La confianza del certificado fue comprobada utilizando la CA del laboratorio.
+- Suricata permanece activo y registra las conexiones TLS observadas.
+- El archivo `.env` y las claves privadas no están versionados.
+- Se comprobó mediante Git que no existe contenido de claves privadas publicado en el repositorio.
+
+### Recuperación realizada durante el despliegue
+
+Durante las pruebas se detectó que el volumen persistente de MySQL conservaba credenciales anteriores y WordPress no podía conectar correctamente con la base de datos.
+
+Se recuperó el servicio utilizando temporalmente MySQL en modo de recuperación, se actualizaron las credenciales correspondientes y posteriormente se restauró el funcionamiento normal del stack.
+
+La comprobación posterior confirmó la conexión con la base de datos y el funcionamiento de WordPress sin eliminar el volumen persistente.
+
+### Reproducibilidad
+
+El repositorio contiene la configuración de Docker Compose, Nginx, scripts y documentación necesarios para reproducir el despliegue.
+
+Las claves privadas y las variables sensibles no se publican. Para reproducir el entorno es necesario proporcionar un archivo `.env` propio y los certificados correspondientes en las rutas documentadas.
+
+Antes de iniciar los servicios puede validarse la configuración con:
+
+`docker compose config --quiet`
+
+y posteriormente desplegarse mediante Docker Compose.
+
 
 ## Evidencias
 
