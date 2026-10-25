@@ -190,3 +190,53 @@ Esta prueba demuestra que Suricata puede detectar y registrar tráfico TCP SYN g
 | Detección TCP SYN | Correcta |
 | Alerta TCP en `fast.log` | Correcta |
 | Alerta TCP en `eve.json` | Correcta |
+
+## Fase 1 - Arquitectura HTTPS
+
+```mermaid
+flowchart TD
+
+    CLIENTE["Cliente Windows"]
+
+    subgraph CAEXT["Fuera de la VM CTF"]
+        CA["CA de laboratorio<br/>ca.key / ca.crt"]
+    end
+
+    subgraph VM["VM CTF Ubuntu"]
+
+        SURICATA["Suricata<br/>Interfaz enp0s3"]
+
+        subgraph DOCKER["Docker"]
+
+            NGINX["Nginx Reverse Proxy<br/>TLS<br/>servidor.crt / servidor.key"]
+
+            WP["WordPress<br/>Puerto 80 interno"]
+
+            DB["MySQL<br/>Puerto 3306 interno"]
+
+        end
+    end
+
+    CLIENTE -->|"HTTPS TCP/443"| NGINX
+    NGINX -->|"HTTP interno TCP/80"| WP
+    WP -->|"MySQL TCP/3306"| DB
+
+    CA -.->|"Emite certificado TLS"| NGINX
+
+    SURICATA -.->|"Observa tráfico de red"| CLIENTE
+```
+
+### Redes Docker
+
+- `skynet_public`: Nginx y WordPress.
+- `skynet_private`: WordPress y MySQL.
+
+### Uso de TLS
+
+TLS se utiliza entre el cliente y Nginx mediante HTTPS en el puerto 443. Nginx actúa como punto de terminación TLS y gestiona el certificado y la clave privada del servidor.
+
+La comunicación entre Nginx y WordPress permanece dentro de Docker mediante HTTP. La comunicación entre WordPress y MySQL también es interna y utiliza el puerto 3306.
+
+La autoridad certificadora se mantiene fuera de la VM CTF. La clave privada de la CA no forma parte de la máquina vulnerable.
+
+Suricata permanece instalado directamente en Ubuntu y monitoriza el tráfico de la interfaz de red del servidor.
