@@ -27,4 +27,4 @@ Fase 4
 - F4_5_correlacion_nginx_suricata.png
 - F4_6_comprobacion_final.png
 
-No se incluyen capturas de errores intermedios.
+
