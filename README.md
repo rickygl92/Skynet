@@ -240,3 +240,59 @@ La comunicación entre Nginx y WordPress permanece dentro de Docker mediante HTT
 La autoridad certificadora se mantiene fuera de la VM CTF. La clave privada de la CA no forma parte de la máquina vulnerable.
 
 Suricata permanece instalado directamente en Ubuntu y monitoriza el tráfico de la interfaz de red del servidor.
+
+## Fase 2 - Construcción de la PKI con OpenSSL
+
+Se ha creado una infraestructura PKI de laboratorio utilizando OpenSSL.
+
+La autoridad certificadora se mantiene fuera de la máquina virtual CTF. La clave privada `ca.key` se encuentra cifrada y no se ha transferido al servidor Ubuntu.
+
+La CA raíz se ha generado como certificado autofirmado y se ha comprobado que incluye:
+
+- `CA:TRUE`
+- `pathlen:0`
+- permisos de firma de certificados y CRL
+- algoritmo SHA-256 con RSA
+
+En el servidor Ubuntu se ha generado la clave privada `servidor.key` y la solicitud de certificado `servidor.csr`.
+
+La CSR utiliza como nombre del servidor:
+
+`SkynetFinal`
+
+y contiene el SAN:
+
+`DNS:SkynetFinal`
+
+La firma de la CSR se verificó correctamente mediante OpenSSL.
+
+El certificado `servidor.crt` fue firmado por la CA de laboratorio y contiene:
+
+- `CA:FALSE`
+- `serverAuth`
+- `DNS:SkynetFinal`
+
+Se realizaron las siguientes comprobaciones:
+
+- Validación correcta de la cadena utilizando `ca.crt`.
+- Validación correcta del nombre `SkynetFinal`.
+- Fallo de validación utilizando un nombre de servidor incorrecto.
+- Fallo de validación al no proporcionar la CA de confianza.
+- Comprobación de las fechas de validez.
+- Comprobación de correspondencia entre `servidor.key` y `servidor.crt`.
+
+La instalación final en Ubuntu utiliza:
+
+- `/etc/ssl/private/servidor.key`
+- `/etc/ssl/certs/servidor.crt`
+- `/etc/ssl/certs/ca.crt`
+
+La clave privada del servidor tiene permisos `600` y los certificados permisos `644`.
+
+La validación final se realizó con:
+
+`openssl verify -CAfile /etc/ssl/certs/ca.crt -purpose sslserver -verify_hostname SkynetFinal /etc/ssl/certs/servidor.crt`
+
+Resultado:
+
+`/etc/ssl/certs/servidor.crt: OK`
