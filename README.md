@@ -296,3 +296,83 @@ La validación final se realizó con:
 Resultado:
 
 `/etc/ssl/certs/servidor.crt: OK`
+
+
+## Fase 3 - HTTPS con Nginx Reverse Proxy y Docker
+
+Se ha añadido Nginx como reverse proxy delante de WordPress.
+
+Nginx es el único servicio web que publica puertos hacia el host:
+
+- `80/tcp` para HTTP.
+- `443/tcp` para HTTPS.
+
+WordPress mantiene el puerto 80 únicamente dentro de Docker y MySQL no publica el puerto 3306 hacia el host.
+
+### Redes Docker
+
+La distribución de servicios es:
+
+- `skynet_public`: Nginx y WordPress.
+- `skynet_private`: WordPress y MySQL.
+
+Nginx recibe las conexiones del cliente y reenvía las peticiones internamente hacia WordPress.
+
+### TLS
+
+Nginx utiliza:
+
+- `/etc/ssl/certs/servidor.crt`
+- `/etc/ssl/private/servidor.key`
+
+Los archivos se montan dentro del contenedor Nginx en modo solo lectura.
+
+La configuración de Nginx se validó mediante:
+
+`nginx -t`
+
+con resultado satisfactorio.
+
+El certificado presentado por el servicio HTTPS corresponde a `SkynetFinal` y ha sido emitido por `Skynet Lab Root CA`.
+
+### Funcionamiento de la aplicación
+
+Se comprobó que WordPress mantiene correctamente la conexión con MySQL:
+
+`DB_OK`
+
+También se comprobó el acceso real a WordPress mediante HTTPS:
+
+`https://SkynetFinal/wp-login.php`
+
+Resultado:
+
+`HTTP 200`
+
+### Validación desde cliente
+
+La conexión HTTPS se comprobó desde Windows utilizando la CA de laboratorio y el nombre correcto del servidor.
+
+Resultado:
+
+`HTTP 200`
+
+No se utilizó `curl -k`.
+
+Para Windows con Schannel se utilizó `--ssl-no-revoke`, ya que la CA de laboratorio no dispone de servicio de comprobación de revocación.
+
+### Redirección HTTP a HTTPS
+
+Las peticiones realizadas mediante HTTP son redirigidas a HTTPS.
+
+Ejemplo:
+
+`http://SkynetFinal/wp-login.php`
+
+Resultado:
+
+`HTTP/1.1 301 Moved Permanently`
+
+Redirección:
+
+`https://SkynetFinal/wp-login.php`
