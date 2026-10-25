@@ -241,6 +241,21 @@ La autoridad certificadora se mantiene fuera de la VM CTF. La clave privada de l
 
 Suricata permanece instalado directamente en Ubuntu y monitoriza el tráfico de la interfaz de red del servidor.
 
+### Justificación de HTTPS y TLS
+
+HTTP transmite la información sin cifrado, por lo que el contenido de las comunicaciones puede observarse si se captura el tráfico.
+
+HTTPS añade TLS a la comunicación HTTP, proporcionando cifrado durante el tránsito y permitiendo autenticar al servidor mediante un certificado digital.
+
+En esta arquitectura se utiliza HTTPS entre el cliente y Nginx. Nginx realiza la terminación TLS y utiliza el certificado emitido por la CA de laboratorio.
+
+Las comunicaciones entre Nginx, WordPress y MySQL permanecen dentro de las redes Docker internas.
+
+Se utilizan TLS 1.2 y TLS 1.3, manteniendo deshabilitadas las versiones antiguas del protocolo.
+
+
+
+
 ## Fase 2 - Construcción de la PKI con OpenSSL
 
 Se ha creado una infraestructura PKI de laboratorio utilizando OpenSSL.
@@ -297,6 +312,18 @@ Resultado:
 
 `/etc/ssl/certs/servidor.crt: OK`
 
+### Interpretación del certificado del servidor
+
+El certificado `servidor.crt` fue revisado mediante OpenSSL para comprobar sus campos principales.
+
+- **Subject:** identifica al servidor certificado. El nombre común es `SkynetFinal`.
+- **Issuer:** identifica a la autoridad que emitió el certificado. En este caso es `Skynet Lab Root CA`.
+- **Validez:** el certificado es válido desde `25 Oct 2026 09:59:11 GMT` hasta `27 Jan 2029 09:59:11 GMT`.
+- **Subject Alternative Name (SAN):** contiene `DNS:SkynetFinal`, que es el nombre utilizado para validar la identidad del servidor.
+- **Clave pública:** utiliza RSA con una longitud de 4096 bits.
+- **Algoritmo de firma:** `sha256WithRSAEncryption`.
+
+Estos campos permiten comprobar la identidad del servidor, quién ha emitido el certificado, durante qué periodo es válido y qué algoritmos criptográficos utiliza.
 
 ## Fase 3 - HTTPS con Nginx Reverse Proxy y Docker
 
@@ -348,6 +375,9 @@ También se comprobó el acceso real a WordPress mediante HTTPS:
 Resultado:
 
 `HTTP 200`
+
+La configuración de Docker Compose se validó mediante `docker compose config --quiet`, sin obtener errores de sintaxis o configuración.
+
 
 ### Validación desde cliente
 
@@ -466,6 +496,29 @@ Suricata registró en el mismo instante:
 
 En esta prueba las dos fuentes mantuvieron la misma IP del cliente.
 
+### Tabla de correlación Nginx y Suricata
+
+Se correlacionó la misma petición HTTPS utilizando los registros de Nginx y Suricata.
+
+| Dato | Nginx | Suricata |
+|---|---|---|
+| Fecha/hora | 25/Oct/2026 11:00:27 +0000 | 2026-10-25 11:00:27 +0000 |
+| IP cliente | 192.168.1.13 | 192.168.1.13 |
+| IP servidor | Servicio Nginx | 192.168.1.134 |
+| Puerto destino | 443 mediante HTTPS | 443 |
+| Petición | `GET /wp-login.php?suricata=1` | No visible en claro |
+| Resultado HTTP | 200 | No visible |
+| Protocolo | HTTPS | TLS 1.3 |
+| SNI | `SkynetFinal` | `skynetfinal` |
+| Regla / SID | No aplica | `1000004` - `SKYNET - HTTPS TLS CONNECTION` |
+
+Ambas fuentes registran la misma conexión y mantienen la IP real del cliente `192.168.1.13`.
+
+Nginx puede registrar la ruta solicitada y el código HTTP porque realiza la terminación TLS. Suricata observa la conexión cifrada antes de esa terminación y puede identificar datos como IPs, puertos, versión TLS y SNI, pero no puede ver por sí solo la ruta HTTPS.
+
+Una conexión o un paquete SYN dirigido al puerto 443 no implica por sí mismo que exista un ataque. La regla `1000004` únicamente genera una alerta para registrar una conexión TLS hacia el servicio HTTPS.
+
+
 ### Comprobación final
 
 Se comprobó finalmente que:
@@ -492,10 +545,12 @@ La evidencia de esta fase corresponde al diagrama de arquitectura incluido en el
 - [F2.4 - Certificado del servidor](evidencias/F2_4_certificado_servidor.png)
 - [F2.5 - Verificación del certificado](evidencias/F2_5_verificacion_certificado.png)
 - [F2.6 - Instalación, permisos y validación](evidencias/F2_6_permisos_validacion.png)
+- [F2.7 - Interpretación del certificado](evidencias/F2_7_interpretacion_certificado.png)
 
 ### Fase 3 - HTTPS con Nginx Reverse Proxy y Docker
 
 - [F3.1 / F3.2 - Docker Compose, Nginx y validación](evidencias/F3_1_2_compose_nginx.png)
+- [F3.1 - Validación de Docker Compose](evidencias/F3_1_validacion_compose.png)
 - [F3.2 / F3.3 - Certificado, puertos y redes Docker](evidencias/F3_2_3_certificado_puertos_redes.png)
 - [F3.4 - WordPress, MySQL y HTTPS](evidencias/F3_4_wordpress_mysql_https.png)
 - [F3.5 / F3.6 - HTTPS desde cliente y redirección HTTP a HTTPS](evidencias/F3_5_6_https_redireccion.png)
@@ -504,7 +559,8 @@ La evidencia de esta fase corresponde al diagrama de arquitectura incluido en el
 
 - [F4.1 - Línea base TLS](evidencias/F4_1_linea_base_tls.png)
 - [F4.2 - Configuración TLS de Nginx](evidencias/F4_2_configuracion_nginx_tls.png)
-- [F4.2 - Pruebas TLS 1.2, TLS 1.3 y rechazo de TLS 1.1](evidencias/F4_2_protocolos_tls.png)
+- [F4.2 - Pruebas TLS 1.2, TLS 1.3 e intento TLS 1.1 desde cliente](evidencias/F4_2_protocolos_tls.png)
+- [F4.2 - Enumeración de protocolos ofrecidos por el servidor](evidencias/F4_2_nmap_protocolos_servidor.png)
 - [F4.3 - Tráfico HTTP visible en claro](evidencias/F4_3_http_claro.png)
 - [F4.3 - Tráfico HTTPS cifrado](evidencias/F4_3_https_cifrado.png)
 - [F4.4 - Alerta HTTPS real en Suricata](evidencias/F4_4_suricata_alerta.png)
