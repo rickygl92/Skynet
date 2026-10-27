@@ -318,7 +318,7 @@ El certificado `servidor.crt` fue revisado mediante OpenSSL para comprobar sus c
 
 - **Subject:** identifica al servidor certificado. El nombre común es `SkynetFinal`.
 - **Issuer:** identifica a la autoridad que emitió el certificado. En este caso es `Skynet Lab Root CA`.
-- **Validez:** el certificado es válido desde `25 Oct 2026 09:59:11 GMT` hasta `27 Jan 2029 09:59:11 GMT`.
+- **Validez:** el certificado ha sido emitido con una vigencia de 3650 días, desde `27 Oct 2026 14:19:42 GMT` hasta `24 Oct 2036 14:19:42 GMT`.
 - **Subject Alternative Name (SAN):** contiene `DNS:SkynetFinal`, que es el nombre utilizado para validar la identidad del servidor.
 - **Clave pública:** utiliza RSA con una longitud de 4096 bits.
 - **Algoritmo de firma:** `sha256WithRSAEncryption`.
