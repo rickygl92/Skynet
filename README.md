@@ -7,8 +7,8 @@ Proyecto individual
 
 Descripción de la maquina virtual:
 
-S.O: Ubuntu 23.04 LTS (64 bits)
-Kernel: Linux 5.15.0
+S.O: Ubuntu 23.04 (interim, 64 bits)
+Kernel: Linux 6.2.0-39-generic
 Red: Bridge
 IP: ¿?
 
@@ -17,7 +17,7 @@ Tecnologías:
 ├─ Virtualización: Docker + Docker Compose
 ├─ Web:          WordPress 6.4
 ├─ Base Datos:   MySQL 8.0
-├─ Acceso:       OpenSSH 8.0 
+├─ Acceso:       OpenSSH 9.0p1 
 ├─ Seguridad:    Suricata IDS 
 └─ Orquestación: 2 Contenedores 
 
