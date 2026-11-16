@@ -1,42 +1,20 @@
 #!/bin/bash
-
 set -e
 
-echo "===== SKYNET - VERIFICACION DE STACK ====="
+cd "$(dirname "$0")/.."
 
-echo
-echo "[1/7] Contenedores activos..."
-sudo docker ps
+echo "===== SKYNET - VERIFICACION DEL STACK ====="
 
-echo
-echo "[2/7] Red skynet_public..."
-sudo docker network inspect skynet_public \
-  --format '{{range .Containers}}{{.Name}} {{end}}'
+echo; echo "[1/4] Servicios (compose)..."
+sudo docker compose ps
 
-echo
-echo "[3/7] Red skynet_private..."
-sudo docker network inspect skynet_private \
-  --format '{{range .Containers}}{{.Name}} {{end}}'
+echo; echo "[2/4] Red privada interna (MySQL sin salida)..."
+sudo docker network inspect skynet_private -f 'internal={{.Internal}}'
 
-echo
-echo "[4/7] Volumenes..."
-sudo docker volume ls | grep skynet
+echo; echo "[3/4] Resolucion WordPress -> MySQL..."
+sudo docker compose exec -T wordpress getent hosts skynet_mysql
 
-echo
-echo "[5/7] Puertos WordPress..."
-sudo docker port skynet_wordpress
+echo; echo "[4/4] Redireccion HTTP -> HTTPS..."
+curl -sI http://localhost | head -n 1
 
-echo
-echo "[6/7] Puertos MySQL..."
-sudo docker port skynet_mysql || true
-
-echo
-echo "[7/7] Resolucion WordPress -> MySQL..."
-sudo docker exec skynet_wordpress getent hosts skynet_mysql
-
-echo
-echo "[HTTP localhost]"
-curl -I http://localhost
-
-echo
-echo "===== STACK SKYNET OPERATIVO ====="
+echo; echo "===== STACK OPERATIVO ====="
