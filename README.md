@@ -657,3 +657,13 @@ La evidencia de esta fase corresponde al diagrama de arquitectura incluido en el
 - [F4.4 - Regla propia y validación de Suricata](evidencias/F4_4_suricata_regla_validacion.png)
 - [F4.5 - Correlación entre Nginx y Suricata](evidencias/F4_5_correlacion_nginx_suricata.png)
 - [F4.6 - Comprobación final del entorno](evidencias/F4_6_comprobacion_final.png)
+
+## MF0490 — Reto final Boot2Root
+
+A partir de la infraestructura de MF0488 y MF0489 (Ubuntu + Docker con WordPress, MySQL, Nginx/TLS y Suricata), este modulo convierte la maquina en un CTF Boot2Root: Skynet: Terminator Hunter.
+
+Ruta principal de dos etapas: servicio web (HTTPS) -> usuario limitado del Ubuntu anfitrion (user.txt) -> escalada local a root (/root/root.txt).
+
+- Se ejecuta exclusivamente en una red aislada de laboratorio.
+- Datos de conexion y tematica en la ficha publica: docs/MF0490/ficha-publica-ctf.md
+- La solucion, credenciales y banderas NO se publican aqui (viven en un dossier privado del docente). El .env, claves y *.ova estan excluidos via .gitignore.
