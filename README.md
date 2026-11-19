@@ -667,3 +667,27 @@ Ruta principal de dos etapas: servicio web (HTTPS) -> usuario limitado del Ubunt
 - Se ejecuta exclusivamente en una red aislada de laboratorio.
 - Datos de conexion y tematica en la ficha publica: docs/MF0490/ficha-publica-ctf.md
 - La solucion, credenciales y banderas NO se publican aqui (viven en un dossier privado del docente). El .env, claves y *.ova estan excluidos via .gitignore.
+## MF0490 — Reto final Boot2Root
+
+A partir de la infraestructura construida en MF0488 y MF0489 (Ubuntu Server + Docker con WordPress, MySQL, Nginx/TLS y Suricata), este módulo convierte la máquina en un **CTF de tipo Boot2Root**: *Skynet: Terminator Hunter*.
+
+El reto plantea una ruta principal de dos etapas:
+
+```
+Jugador (otra máquina del laboratorio)
+        │
+        ▼
+  Servicio web accesible (HTTPS)
+        │
+        ▼
+  Usuario limitado del Ubuntu anfitrión  →  user.txt
+        │
+        ▼
+  Escalada de privilegios local  →  root  →  /root/root.txt
+```
+
+- Se ejecuta **exclusivamente en una red aislada de laboratorio**.
+- El objetivo es obtener las dos banderas (`user.txt` y `root.txt`).
+- Los datos de conexión y la temática están en la **ficha pública**: [`docs/MF0490/ficha-publica-ctf.md`](docs/MF0490/ficha-publica-ctf.md).
+
+> La solución, las credenciales y los valores de las banderas **no** se publican en este repositorio: viven en un dossier privado entregado al docente. Igualmente, el `.env`, las claves privadas y los ficheros `*.ova` están excluidos vía `.gitignore`.
