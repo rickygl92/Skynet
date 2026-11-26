@@ -9,17 +9,18 @@ Descripción de la maquina virtual:
 
 S.O: Ubuntu 23.04 (interim, 64 bits)
 Kernel: Linux 5.15.0-25-generic
-Red: Bridge
-IP: ¿?
+Red: DHCP
+IP: dinámica (DHCP)
 
 Tecnologías:
 ─ SO:           Ubuntu 23.04 (64 bits)
 ├─ Virtualización: Docker + Docker Compose
+├─ Reverse Proxy: Nginx (terminación TLS/HTTPS, publica 80 y 443)
 ├─ Web:          WordPress 6.4
 ├─ Base Datos:   MySQL 8.0
 ├─ Acceso:       OpenSSH 9.0p1 
 ├─ Seguridad:    Suricata IDS 
-└─ Orquestación: 2 Contenedores 
+└─ Orquestación: 3 Contenedores (Nginx, WordPress, MySQL)
 
 
 Temática del CTF: "Skynet: Terminator Hunter"
@@ -95,9 +96,10 @@ Arquitectura:
 
 | Servicio  | Puerto   | Expuesto | Función                    |
 |-----------|----------|----------|----------------------------|
-| SSH       | 22/TCP   | Sí       | Acceso remoto al servidor  |
-| WordPress | 80/TCP   | Sí       | Aplicación web             |
-| MySQL     | 3306/TCP | No       | Base de datos interna      |
+| SSH       | 22/TCP          | Sí  | Acceso remoto al servidor  |
+| Nginx     | 80, 443/TCP     | Sí  | Reverse proxy y terminación TLS (80 redirige a 443) |
+| WordPress | 80/TCP interno  | No  | Aplicación web (solo accesible tras Nginx) |
+| MySQL     | 3306/TCP        | No  | Base de datos interna      |
 
 
 
@@ -105,9 +107,10 @@ Arquitectura:
 
 | Servicio        | Tecnología            | Puerto   | Expuesto | Función |
 |----------------|-----------------------|----------|----------|---------|
-| SSH            | OpenSSH               | 22/TCP   | Sí       | Acceso remoto y administración del servidor |
-| Web            | WordPress + Apache    | 80/TCP   | Sí       | Aplicación web accesible por los usuarios |
-| Base de datos  | MySQL 8.0             | 3306/TCP | No       | Persistencia de datos de WordPress |
+| SSH            | OpenSSH               | 22/TCP         | Sí  | Acceso remoto y administración del servidor |
+| Reverse proxy  | Nginx                 | 80, 443/TCP    | Sí  | Terminación TLS/HTTPS y proxy a WordPress (80 redirige a 443) |
+| Web            | WordPress + Apache    | 80/TCP interno | No  | Aplicación web, accesible solo tras Nginx |
+| Base de datos  | MySQL 8.0             | 3306/TCP       | No  | Persistencia de datos de WordPress |
 | Docker         | Docker Engine         | N/A      | No       | Ejecución y gestión de los contenedores |
 | IDS            | Suricata              | N/A      | No       | Monitorización y detección de tráfico de red |
 
