@@ -8,7 +8,7 @@ Proyecto individual
 Descripción de la maquina virtual:
 
 S.O: Ubuntu 23.04 (interim, 64 bits)
-Kernel: Linux 6.2.0-39-generic
+Kernel: Linux 5.15.0-25-generic
 Red: Bridge
 IP: ¿?
 
